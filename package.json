@@ -18,5 +18,8 @@
 	"dependencies": {
 		"hono": "^4.7.10",
 		"replicate": "^1.0.1"
+	},
+	"overrides": {
+		"devalue": "^5.3.2"
 	}
 }
