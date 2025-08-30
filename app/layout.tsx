@@ -3,27 +3,27 @@ import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
 
 export const metadata: Metadata = {
-  title: "AI Image Editor - Transform images with AI, powered by Nano-Banana on Replicate",
-  description: "AI Image Editor is a tool for image editing powered by Nano-Banana, an image model from Google, running on Replicate. The app is built with Hono and React, running on Cloudflare Workers. Learn how to build your own app by taking a look at the source code on GitHub.",
+  title: "Nano-Banana AI Image Editor - Transform Images with AI",
+  description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Choose between Replicate or FAL as your AI provider. Upload an image and describe how you'd like to edit it using natural language.",
   openGraph: {
     type: "website",
-    url: "https://kontext-chat.replicate.dev/",
-    title: "AI Image Editor - Transform images with AI",
-    description: "AI Image Editor is a tool for image editing powered by Nano-Banana, an image model from Google, running on Replicate. The app is built with Hono and React, running on Cloudflare Workers. Learn how to build your own app by taking a look at the source code on GitHub.",
+    url: "https://nano-banana-chat.vercel.app/",
+    title: "Nano-Banana AI Image Editor",
+    description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Upload an image and describe how you'd like to edit it using natural language.",
     images: [
       {
-        url: "https://kontext-chat.replicate.dev/kontext-chat.jpg",
+        url: "/preview.png",
         width: 1200,
         height: 630,
-        alt: "AI Image Editor",
+        alt: "Nano-Banana AI Image Editor",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Image Editor - Transform images with AI",
-    description: "AI Image Editor is a tool for image editing powered by Nano-Banana, an image model from Google, running on Replicate. The app is built with Hono and React, running on Cloudflare Workers. Learn how to build your own app by taking a look at the source code on GitHub.",
-    images: ["https://kontext-chat.replicate.dev/kontext-chat.jpg"],
+    title: "Nano-Banana AI Image Editor",
+    description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Upload an image and describe how you'd like to edit it using natural language.",
+    images: ["/preview.png"],
   },
 };
 
