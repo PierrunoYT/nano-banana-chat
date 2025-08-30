@@ -23,7 +23,7 @@ const starterImages = [
 
 function PoweredByBanner() {
   return (
-    <div className="bg-orange-500 text-white text-center text-base md:text-lg py-2">
+    <div className="bg-yellow-500 text-white text-center text-base md:text-lg py-2">
       <a
         href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat"
         target="_blank"
@@ -442,6 +442,26 @@ function App() {
     window.open(imageUrl, '_blank');
   }
 
+  // Download image function
+  async function downloadImage(imageUrl) {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `nano-banana-${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      // Fallback: open image in new tab
+      window.open(imageUrl, '_blank');
+    }
+  }
+
   // Attach drag events when in upload mode
   React.useEffect(() => {
     if (showUpload) {
@@ -486,15 +506,15 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e04f0c] to-[#f47020] md:overflow-auto overflow-hidden">
+    <div className="min-h-screen md:overflow-auto overflow-hidden">
       {/* Replicate API Token Modal */}
       {showTokenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
-            <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" />
+          <div className="bg-yellow-100 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
+            <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
             <h2 className="text-xl font-bold mb-2 text-center">Enter your Replicate API Token</h2>
             <p className="text-gray-700 text-center mb-4">To use AI Image Editor, you'll need a Replicate API token.<br />
-              <a href="https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" target="_blank" rel="noopener noreferrer" className="underline text-orange-600">Create a token here</a> and paste it below.
+              <a href="https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" target="_blank" rel="noopener noreferrer" className="underline text-yellow-600">Create a token here</a> and paste it below.
             </p>
             <form onSubmit={handleTokenSubmit} className="w-full flex flex-col items-center">
               <input
@@ -508,7 +528,7 @@ function App() {
               {tokenError && <div className="text-red-600 text-sm mb-2">{tokenError}</div>}
               <button
                 type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 font-semibold transition-colors"
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg px-4 py-2 font-semibold transition-colors"
               >
                 Save Token
               </button>
@@ -520,10 +540,10 @@ function App() {
       <div className="min-h-screen flex flex-col md:flex md:items-center h-screen md:h-auto">
         {showUpload ? (
           /* Upload Section */
-          <div className="w-full md:max-w-4xl bg-white md:shadow-md flex flex-col h-screen md:h-auto overflow-hidden md:overflow-visible">
+          <div className="w-full md:max-w-4xl bg-yellow-100/95 backdrop-blur-sm md:shadow-lg md:rounded-2xl flex flex-col h-screen md:h-auto overflow-hidden md:overflow-visible">
             {/* Logo */}
-            <div className="p-4 md:p-2 bg-white border-b border-gray-200">
-              <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" />
+            <div className="p-4 md:p-2 border-b border-yellow-300">
+              <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
             </div>
             <PoweredByBanner />
 
@@ -542,8 +562,8 @@ function App() {
               <div
                 className={`border-2 border-dashed rounded-3xl p-8 md:p-12 text-center cursor-pointer mb-12 transition-all duration-300 ${
                   dragActive
-                    ? 'border-emerald-400 bg-emerald-50 text-emerald-700 scale-105 shadow-lg'
-                    : 'border-gray-300 bg-white hover:border-orange-400 hover:bg-orange-50 text-gray-700 hover:text-orange-700 hover:shadow-lg hover:scale-105'
+                    ? 'border-yellow-400 bg-yellow-200/80 text-yellow-800 scale-105 shadow-lg'
+                    : 'border-yellow-300 bg-yellow-50/60 hover:border-yellow-400 hover:bg-yellow-100/80 text-gray-700 hover:text-yellow-800 hover:shadow-lg hover:scale-105'
                 }`}
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -573,7 +593,7 @@ function App() {
                 {starterImages.map((starter, idx) => (
                   <button
                     key={idx}
-                    className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 shadow-md hover:shadow-xl bg-white group hover:scale-105"
+                    className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-500 transition-all duration-300 shadow-md hover:shadow-xl bg-yellow-50 group hover:scale-105"
                     onClick={() => handleStarterImageClick(starter)}
                     disabled={loading}
                     title={starter.suggestedPrompt}
@@ -590,19 +610,19 @@ function App() {
               {/* Footer Text */}
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
-                  AI Image Editor is powered by <a href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Nano-Banana</a>, an image model from <a href="https://google.com/" className="underline text-orange-600 hover:text-orange-700">Google</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-orange-600 hover:text-orange-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-orange-600 hover:text-orange-700">source code</a> on GitHub.
+                  AI Image Editor is powered by <a href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, an image model from <a href="https://google.com/" className="underline text-yellow-600 hover:text-yellow-700">Google</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-yellow-600 hover:text-yellow-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub.
                 </p>
               </div>
             </div>
           </div>
         ) : (
           /* Chat Section */
-          <div className="w-full md:max-w-4xl bg-white md:shadow-md overflow-hidden flex flex-col h-screen md:h-screen relative">
+          <div className="w-full md:max-w-4xl bg-yellow-100/95 backdrop-blur-sm md:shadow-lg md:rounded-2xl overflow-hidden flex flex-col h-screen md:h-screen relative">
             {/* Chat Header with Logo */}
-            <div className="p-4 md:p-2 bg-white border-b border-gray-200 relative flex items-center flex-shrink-0">
+            <div className="p-4 md:p-2 border-b border-yellow-300 relative flex items-center flex-shrink-0">
               <button
                 onClick={resetApp}
-                className="absolute left-4 w-8 h-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                className="absolute left-4 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
                 title="Back to upload"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -612,7 +632,8 @@ function App() {
               <img 
                 src="/nanobanana.png" 
                 className="w-1/3 md:w-1/4 mx-auto cursor-pointer hover:opacity-90 transition-opacity" 
-                alt="Nano-Banana" 
+                alt="Nano-Banana"
+                style={{mixBlendMode: 'multiply'}} 
                 onClick={resetApp}
                 title="Back to upload"
               />
@@ -644,23 +665,35 @@ function App() {
                         ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-3xl px-4 py-3'
                         : msg.from === 'system'
                         ? 'bg-blue-50 text-blue-800 rounded-2xl px-4 py-3 italic'
-                        : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md px-4 py-3'
+                        : 'bg-yellow-50 text-gray-800 rounded-2xl rounded-bl-md px-4 py-3'
                     }`}
                   >
                     {msg.type === 'image' && (
-                      <img
-                        src={msg.image}
-                        alt="Generated image"
-                        className="max-w-xs rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                        onClick={() => handleImageClick(msg.image)}
-                        onLoad={scrollToBottom}
-                      />
+                      <div className="relative inline-block">
+                        <img
+                          src={msg.image}
+                          alt="Generated image"
+                          className="max-w-xs rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => handleImageClick(msg.image)}
+                          onLoad={scrollToBottom}
+                        />
+                        {/* Download button for images */}
+                        <button
+                          onClick={() => downloadImage(msg.image)}
+                          className="absolute -top-2 -left-2 w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+                          title="Download image"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                          </svg>
+                        </button>
+                      </div>
                     )}
                     {msg.type === 'loading' && (
                       <div className="flex flex-col items-center gap-4 py-8 px-12">
                         <div className="relative">
-                          <div className="w-16 h-16 border-4 border-gray-200 border-t-orange-500 rounded-full animate-spin"></div>
-                          <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-orange-300 rounded-full animate-spin" style={{animationDelay: '0.2s', animationDuration: '1.5s'}}></div>
+                          <div className="w-16 h-16 border-4 border-gray-200 border-t-yellow-500 rounded-full animate-spin"></div>
+                          <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-yellow-300 rounded-full animate-spin" style={{animationDelay: '0.2s', animationDuration: '1.5s'}}></div>
                         </div>
                         <div className="text-center">
                           <span className="text-gray-700 font-medium">Generating image...</span>
@@ -688,10 +721,10 @@ function App() {
             </div>
 
             {/* Input Area */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200 p-4 md:relative md:border-t md:bg-white md:backdrop-blur-none" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'}}>
+            <div className="fixed bottom-0 left-0 right-0 bg-yellow-100/90 backdrop-blur-sm border-t border-yellow-300 p-4 md:relative md:border-t md:bg-yellow-100 md:backdrop-blur-none" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'}}>
               <form onSubmit={handleSend} className="flex items-end gap-3 max-w-4xl mx-auto">
                 <div className="flex-1 relative">
-                  <div className="bg-gray-50 rounded-3xl px-4 py-3 pr-12 border-2 border-gray-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-200 transition-all duration-200 shadow-sm">
+                  <div className="bg-yellow-50 rounded-3xl px-4 py-3 pr-12 border-2 border-yellow-300 focus-within:border-yellow-500 focus-within:ring-2 focus-within:ring-yellow-200 transition-all duration-200 shadow-sm">
                     <textarea
                       ref={textareaRef}
                       value={input}
@@ -716,7 +749,7 @@ function App() {
                       <button
                         type="button"
                         onClick={cancelGeneration}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center transition-all duration-200"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -726,7 +759,7 @@ function App() {
                       <button
                         type="submit"
                         disabled={!input.trim() || loading}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
