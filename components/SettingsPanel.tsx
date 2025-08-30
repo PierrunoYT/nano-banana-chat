@@ -16,7 +16,7 @@ export default function SettingsPanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-yellow-100 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
         <div className="flex items-center justify-between w-full mb-4">
           <h2 className="text-xl font-bold">API Settings</h2>
