@@ -1,3 +1,8 @@
+'use client';
+
+import React from 'react';
+import { Button } from '@/components/ui/button';
+
 const starterImages = [
   {
     imageUrl: 'https://replicate.delivery/pbxt/N55l5TWGh8mSlNzW8usReoaNhGbFwvLeZR3TX1NL4pd2Wtfv/replicate-prediction-f2d25rg6gnrma0cq257vdw2n4c.png',
@@ -15,11 +20,11 @@ const starterImages = [
     imageUrl: 'https://replicate.delivery/pbxt/N5trWTJCJQbJVWz5nhLEscS1w16r1hGl5zuWceJhVSnWZfGu/mona-lisa-1024.jpg',
     suggestedPrompt: 'close her eyes',
   },
-	{
+  {
     imageUrl: 'https://replicate.delivery/mgxm/b033ff07-1d2e-4768-a137-6c16b5ed4bed/d_1.png',
     suggestedPrompt: 'Convert to a high-quality restoration, enhancing details and removing any damage or degradation',
   }
-]
+];
 
 function PoweredByBanner() {
   return (
@@ -36,16 +41,23 @@ function PoweredByBanner() {
   );
 }
 
-function App() {
+interface Message {
+  type: 'image' | 'text' | 'loading';
+  text?: string;
+  image?: string;
+  imageBlob?: Blob;
+  from: 'user' | 'assistant' | 'system';
+  id: number;
+  showDelete?: boolean;
+}
+
+export default function App() {
   // State for upload vs chat mode
   const [showUpload, setShowUpload] = React.useState(true);
-  const [messages, setMessages] = React.useState([]);
+  const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  // No need for separate image state - just use what's in the chat!
-  const [predictionId, setPredictionId] = React.useState(null);
-  const [abortController, setAbortController] = React.useState(null);
-  // New: track if a starter image was used (for future logic if needed)
+  const [abortController, setAbortController] = React.useState<AbortController | null>(null);
   const [starterUsed, setStarterUsed] = React.useState(false);
   
   // Replicate API token state
@@ -68,12 +80,12 @@ function App() {
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
-  // Ref for chat container and file input
-  const chatContainerRef = React.useRef(null);
-  const fileInputRef = React.useRef(null);
-  const textareaRef = React.useRef(null);
+  // Refs
+  const chatContainerRef = React.useRef<HTMLDivElement>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
-  // Focus textarea when component mounts or when switching to chat mode
+  // Focus textarea when switching to chat mode
   React.useEffect(() => {
     if (!showUpload && textareaRef.current) {
       textareaRef.current.focus();
@@ -85,12 +97,14 @@ function App() {
   React.useEffect(() => {
     if (chatContainerRef.current) {
       setTimeout(() => {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
       }, 50);
     }
   }, [messages]);
 
-  // Lock body scrolling on mobile for a consistent experience across screens
+  // Lock body scrolling on mobile
   React.useEffect(() => {
     if (!isDesktop) {
       document.body.style.overflow = 'hidden';
@@ -112,17 +126,19 @@ function App() {
   // Drag and drop state
   const [dragActive, setDragActive] = React.useState(false);
 
-  // Helper to scroll to bottom (for image onLoad)
+  // Helper to scroll to bottom
   function scrollToBottom() {
     if (chatContainerRef.current) {
       setTimeout(() => {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
       }, 50);
     }
   }
 
-  // Drag and drop handlers for upload area
-  function handleDrag(e) {
+  // Drag and drop handlers
+  function handleDrag(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -132,7 +148,7 @@ function App() {
     }
   }
 
-  function handleDrop(e) {
+  function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -143,15 +159,15 @@ function App() {
   }
 
   // Handle file selection
-  function handleFileSelect(e) {
-    const file = e.target.files[0];
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
     if (file) {
       handleFile(file);
     }
   }
 
   // Process uploaded file
-  async function handleFile(file) {
+  async function handleFile(file: File) {
     if (!file.type.startsWith('image/')) {
       alert('Please select a valid image file.');
       return;
@@ -177,19 +193,17 @@ function App() {
 
       // Switch to chat mode
       setShowUpload(false);
-    } catch (error) {
+    } catch (error: any) {
       alert('Failed to process image: ' + error.message);
     }
   }
 
-  // Handle click on starter image
-  async function handleStarterImageClick(starter) {
-    // Fetch the image as a blob so it behaves like uploaded images
+  // Handle starter image click
+  async function handleStarterImageClick(starter: typeof starterImages[0]) {
     try {
       setLoading(true);
       const res = await fetch(starter.imageUrl);
       const blob = await res.blob();
-      // Add image as first message
       setMessages([
         { type: 'image', image: starter.imageUrl, imageBlob: blob, from: 'assistant', id: Date.now() },
         { type: 'text', text: "Image loaded! Tell me how you'd like to edit it.", from: 'system', id: Date.now() + 1 }
@@ -205,10 +219,10 @@ function App() {
   }
 
   // Helper function to convert blob to data URL
-  function blobToDataUrl(blob) {
+  function blobToDataUrl(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
@@ -225,7 +239,7 @@ function App() {
   }
 
   // Scale image function
-  async function scaleImageTo1Megapixel(file) {
+  async function scaleImageTo1Megapixel(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const canvas = document.createElement('canvas');
@@ -250,7 +264,7 @@ function App() {
 
         canvas.width = newWidth;
         canvas.height = newHeight;
-        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+        ctx?.drawImage(img, 0, 0, newWidth, newHeight);
 
         canvas.toBlob((blob) => {
           if (blob) {
@@ -277,7 +291,6 @@ function App() {
     setShowUpload(true);
     setMessages([]);
     setInput('');
-    setPredictionId(null);
     setAbortController(null);
     setLoading(false);
     setStarterUsed(false);
@@ -287,18 +300,18 @@ function App() {
   }
 
   // Handle sending a message
-  const handleSend = async (e) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const lastImageBlob = getLastImageBlob();
     if (!input.trim() || loading || !lastImageBlob || !replicateToken) return;
 
-    const userMsg = { type: 'text', text: input, from: 'user', id: Date.now() };
+    const userMsg: Message = { type: 'text', text: input, from: 'user', id: Date.now() };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     // Add loading message
-    const loadingMsg = { type: 'loading', from: 'assistant', id: Date.now() + 1 };
+    const loadingMsg: Message = { type: 'loading', from: 'assistant', id: Date.now() + 1 };
     setMessages(prev => [...prev, loadingMsg]);
 
     try {
@@ -307,50 +320,41 @@ function App() {
       setAbortController(controller);
 
       // Convert blob to data URL for the API
-      console.log('Converting blob to data URL...');
       const imageDataUrl = await blobToDataUrl(lastImageBlob);
-      console.log('Image data URL length:', imageDataUrl.length);
 
-      console.log('Sending request to /api/generate-image...');
       const requestBody = {
         prompt: input,
         input_image: imageDataUrl
       };
-      console.log('Request body size:', JSON.stringify(requestBody).length);
 
       const res = await fetch('/api/generate-image', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Replicate-Api-Token': replicateToken },
+        headers: { 
+          'Content-Type': 'application/json', 
+          'X-Replicate-Api-Token': replicateToken 
+        },
         body: JSON.stringify(requestBody),
         signal: controller.signal
       });
 
-      console.log('Response status:', res.status);
-      console.log('Response headers:', Object.fromEntries(res.headers.entries()));
-
       if (!res.ok) {
         const errorText = await res.text();
-        console.error('Error response body:', errorText);
         throw new Error(`HTTP ${res.status}: ${errorText}`);
       }
 
-      // The response is now JSON with the Cloudflare Images URL
       const result = await res.json();
-      console.log('Response result:', result);
 
       if (result.error) {
         throw new Error(result.error);
       }
 
       const imageUrl = result.imageUrl;
-      console.log('Cloudflare Images URL:', imageUrl);
 
-      // Fetch the image to create a blob for local storage/UI purposes
+      // Fetch the image to create a blob
       const imageResponse = await fetch(imageUrl);
       const imageBlob = await imageResponse.blob();
-      console.log('Image blob size:', imageBlob.size);
 
-      // Replace loading with image (store blob in message)
+      // Replace loading with image
       setMessages(prev => prev.map(msg =>
         msg.type === 'loading' ?
           { type: 'image', image: imageUrl, imageBlob: imageBlob, from: 'assistant', id: msg.id } :
@@ -362,8 +366,7 @@ function App() {
         msg.id === userMsg.id ? { ...msg, showDelete: true } : msg
       ));
 
-    } catch (err) {
-      // Don't show error if request was aborted (cancelled)
+    } catch (err: any) {
       if (err.name !== 'AbortError') {
         setMessages(prev => prev.filter(msg => msg.type !== 'loading'));
         setMessages(prev => [...prev, {
@@ -373,77 +376,60 @@ function App() {
           id: Date.now()
         }]);
       } else {
-        console.log('Request was cancelled');
         setMessages(prev => prev.filter(msg => msg.type !== 'loading'));
       }
     } finally {
       setLoading(false);
-      setPredictionId(null);
       setAbortController(null);
     }
   };
 
   // Cancel generation
   function cancelGeneration() {
-    console.log('Cancel generation called');
-
-    // Abort the ongoing request
     if (abortController) {
-      console.log('Aborting request...');
       abortController.abort();
       setAbortController(null);
     }
 
-    // Stop loading
     setLoading(false);
-    setPredictionId(null);
 
     // Find the most recent user message to restore to input
     const currentMessages = [...messages];
     const lastUserMessage = currentMessages.slice().reverse().find(msg => msg.from === 'user' && msg.type === 'text');
-    console.log('Last user message:', lastUserMessage);
 
     // Remove loading message and the most recent user message
-    // This automatically makes the previous image the "last image" again
     setMessages(prev => {
       const filtered = prev.filter(msg =>
         msg.type !== 'loading' &&
         !(lastUserMessage && msg.from === 'user' && msg.type === 'text' && msg.id === lastUserMessage.id)
       );
-      console.log('Messages after cancel:', filtered.length);
       return filtered;
     });
 
     // Restore the cancelled message to input
     if (lastUserMessage) {
       setTimeout(() => {
-        console.log('Restoring text to input:', lastUserMessage.text);
-        setInput(lastUserMessage.text);
+        setInput(lastUserMessage.text || '');
       }, 50);
     }
   }
 
   // Delete message and all subsequent messages
-  function deleteFromMessage(messageId) {
+  function deleteFromMessage(messageId: number) {
     const messageIndex = messages.findIndex(msg => msg.id === messageId);
     if (messageIndex === -1) return;
 
-    // Keep messages up to the clicked message (excluding it)
     const remainingMessages = messages.slice(0, messageIndex);
     setMessages(remainingMessages);
-
-    // No need to set current image - getLastImageBlob will find it automatically
   }
 
-  // No longer needed - state is derived from chat messages
-
   // Handle image click for full screen
-  function handleImageClick(imageUrl) {
+  function handleImageClick(imageUrl: string) {
     window.open(imageUrl, '_blank');
   }
 
   // Download image function
-  async function downloadImage(imageUrl) {
+  async function downloadImage(imageUrl: string) {
     try {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
@@ -457,7 +443,6 @@ function App() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading image:', error);
-      // Fallback: open image in new tab
       window.open(imageUrl, '_blank');
     }
   }
@@ -465,15 +450,32 @@ function App() {
   // Attach drag events when in upload mode
   React.useEffect(() => {
     if (showUpload) {
-      window.addEventListener('dragenter', handleDrag);
-      window.addEventListener('dragover', handleDrag);
-      window.addEventListener('dragleave', handleDrag);
-      window.addEventListener('drop', handleDrop);
+      const handleDragEvents = (e: DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === 'dragenter' || e.type === 'dragover') {
+          setDragActive(true);
+        } else if (e.type === 'dragleave') {
+          setDragActive(false);
+        } else if (e.type === 'drop') {
+          setDragActive(false);
+          const files = e.dataTransfer?.files;
+          if (files && files[0] && files[0].type.startsWith('image/')) {
+            handleFile(files[0]);
+          }
+        }
+      };
+
+      window.addEventListener('dragenter', handleDragEvents);
+      window.addEventListener('dragover', handleDragEvents);
+      window.addEventListener('dragleave', handleDragEvents);
+      window.addEventListener('drop', handleDragEvents);
+      
       return () => {
-        window.removeEventListener('dragenter', handleDrag);
-        window.removeEventListener('dragover', handleDrag);
-        window.removeEventListener('dragleave', handleDrag);
-        window.removeEventListener('drop', handleDrop);
+        window.removeEventListener('dragenter', handleDragEvents);
+        window.removeEventListener('dragover', handleDragEvents);
+        window.removeEventListener('dragleave', handleDragEvents);
+        window.removeEventListener('drop', handleDragEvents);
       };
     }
   }, [showUpload]);
@@ -486,7 +488,7 @@ function App() {
     }
   }, [replicateToken]);
 
-  function handleTokenSubmit(e) {
+  function handleTokenSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!tokenInput.trim()) {
       setTokenError('Please enter your Replicate API token.');
@@ -513,7 +515,8 @@ function App() {
           <div className="bg-yellow-100 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
             <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
             <h2 className="text-xl font-bold mb-2 text-center">Enter your Replicate API Token</h2>
-            <p className="text-gray-700 text-center mb-4">To use AI Image Editor, you'll need a Replicate API token.<br />
+            <p className="text-gray-700 text-center mb-4">
+              To use AI Image Editor, you'll need a Replicate API token.<br />
               <a href="https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" target="_blank" rel="noopener noreferrer" className="underline text-yellow-600">Create a token here</a> and paste it below.
             </p>
             <form onSubmit={handleTokenSubmit} className="w-full flex flex-col items-center">
@@ -526,16 +529,14 @@ function App() {
                 autoFocus
               />
               {tokenError && <div className="text-red-600 text-sm mb-2">{tokenError}</div>}
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg px-4 py-2 font-semibold transition-colors"
-              >
+              <Button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white">
                 Save Token
-              </button>
+              </Button>
             </form>
           </div>
         </div>
       )}
+      
       {/* Main Content */}
       <div className="h-full w-full flex flex-col">
         {showUpload ? (
@@ -591,9 +592,10 @@ function App() {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {starterImages.map((starter, idx) => (
-                  <button
+                  <Button
                     key={idx}
-                    className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-500 transition-all duration-300 shadow-md hover:shadow-xl bg-yellow-50 group hover:scale-105"
+                    variant="ghost"
+                    className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-500 transition-all duration-300 shadow-md hover:shadow-xl bg-yellow-50 group hover:scale-105 p-0"
                     onClick={() => handleStarterImageClick(starter)}
                     disabled={loading}
                     title={starter.suggestedPrompt}
@@ -603,7 +605,7 @@ function App() {
                       alt={starter.suggestedPrompt}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
                     />
-                  </button>
+                  </Button>
                 ))}
               </div>
 
@@ -623,15 +625,17 @@ function App() {
           <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg overflow-hidden flex flex-col h-full relative">
             {/* Chat Header with Logo */}
             <div className="p-4 md:p-2 border-b border-yellow-300 relative flex items-center flex-shrink-0">
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={resetApp}
-                className="absolute left-4 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                className="absolute left-4 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full transition-all duration-200 hover:scale-105"
                 title="Back to upload"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-              </button>
+              </Button>
               <img 
                 src="/nanobanana.png" 
                 className="w-1/3 md:w-1/4 mx-auto cursor-pointer hover:opacity-90 transition-opacity" 
@@ -640,17 +644,18 @@ function App() {
                 onClick={resetApp}
                 title="Back to upload"
               />
-              {/* Token logout button */}
               {replicateToken && (
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleTokenLogout}
-                  className="absolute right-4 w-8 h-8 bg-gray-200 hover:bg-red-500 text-gray-700 hover:text-white rounded-full flex items-center justify-center transition-all duration-200"
+                  className="absolute right-4 w-8 h-8 bg-gray-200 hover:bg-red-500 text-gray-700 hover:text-white rounded-full transition-all duration-200"
                   title="Remove Replicate API Token"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
-                </button>
+                </Button>
               )}
             </div>
             <PoweredByBanner />
@@ -677,19 +682,20 @@ function App() {
                           src={msg.image}
                           alt="Generated image"
                           className="max-w-xs rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                          onClick={() => handleImageClick(msg.image)}
+                          onClick={() => msg.image && handleImageClick(msg.image)}
                           onLoad={scrollToBottom}
                         />
-                        {/* Download button for images */}
-                        <button
-                          onClick={() => downloadImage(msg.image)}
-                          className="absolute -top-2 -left-2 w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => msg.image && downloadImage(msg.image)}
+                          className="absolute -top-2 -left-2 w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg"
                           title="Download image"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                           </svg>
-                        </button>
+                        </Button>
                       </div>
                     )}
                     {msg.type === 'loading' && (
@@ -706,17 +712,18 @@ function App() {
                     )}
                     {msg.text && <div className="text-base md:text-lg">{msg.text}</div>}
 
-                    {/* Delete button for user messages */}
                     {msg.showDelete && (
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => deleteFromMessage(msg.id)}
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full transition-all duration-200 hover:scale-110"
                         title="Delete from here and continue editing"
                       >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -734,7 +741,7 @@ function App() {
                       onChange={(e) => setInput(e.target.value)}
                       placeholder="Describe how you'd like to edit this image..."
                       className="w-full bg-transparent border-none outline-none resize-none text-base"
-                      rows="1"
+                      rows={1}
                       style={{ minHeight: '24px', maxHeight: '120px' }}
                       disabled={loading}
                       onKeyDown={(e) => {
@@ -749,25 +756,29 @@ function App() {
 
                     {/* Send/Cancel Button */}
                     {loading ? (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         onClick={cancelGeneration}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center transition-all duration-200"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                      </button>
+                      </Button>
                     ) : (
-                      <button
+                      <Button
                         type="submit"
+                        variant="ghost"
+                        size="icon"
                         disabled={!input.trim() || loading}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-full shadow-md hover:shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                         </svg>
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
