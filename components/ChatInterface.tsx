@@ -80,7 +80,7 @@ export default function ChatInterface({
           title="Back to upload"
         />
       </div>
-      <PoweredByBanner />
+      <PoweredByBanner onOpenSettings={onOpenSettings} />
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4 pb-32 md:pb-6" ref={chatContainerRef}>

@@ -32,7 +32,8 @@ export default function ImageUpload({
   onStarterImageClick,
   dragActive,
   onDragStateChange,
-  loading
+  loading,
+  onOpenSettings
 }: ImageUploadProps) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -70,7 +71,7 @@ export default function ImageUpload({
       <div className="p-4 md:p-2 border-b border-yellow-300 relative">
         <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
       </div>
-      <PoweredByBanner />
+      <PoweredByBanner onOpenSettings={onOpenSettings} />
 
       {/* Upload Area */}
       <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto pb-24 md:pb-12">

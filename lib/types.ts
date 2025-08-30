@@ -55,6 +55,7 @@ export interface ImageUploadProps {
   dragActive: boolean;
   onDragStateChange: (active: boolean) => void;
   loading: boolean;
+  onOpenSettings: () => void;
 }
 
 export interface ChatInterfaceProps {
