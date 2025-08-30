@@ -1,45 +1,31 @@
-import React from 'react';
-import { ImageUploadProps, StarterImage } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-import { SecurityFeatures } from './SecurityFeatures';
-
-const starterImages: StarterImage[] = [
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N55l5TWGh8mSlNzW8usReoaNhGbFwvLeZR3TX1NL4pd2Wtfv/replicate-prediction-f2d25rg6gnrma0cq257vdw2n4c.png',
-    suggestedPrompt: 'make it into a 90s cartoon',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N5cepICxyaagdvULl0phi7ImdxuFz05TR2l623zqxhNR9q5Y/van-gogh.jpeg',
-    suggestedPrompt: 'Using this style, a panda astronaut riding a unicorn',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/xezq/OKWfR6jlQwzekkSsfQOppX55O3vaNv6xZ4qY6RfHjwQHOwDTB/tmp9p3v3brc.png',
-    suggestedPrompt: 'remove the text from the sweatshirt',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N5trWTJCJQbJVWz5nhLEscS1w16r1hGl5zuWceJhVSnWZfGu/mona-lisa-1024.jpg',
-    suggestedPrompt: 'close her eyes',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/mgxm/b033ff07-1d2e-4768-a137-6c16b5ed4bed/d_1.png',
-    suggestedPrompt: 'Convert to a high-quality restoration, enhancing details and removing any damage or degradation',
-  }
+import React from 'react';
+import { ImageUploadProps, StarterImage } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { SecurityFeatures } from './SecurityFeatures';
+import PoweredByBanner from '@/components/PoweredByBanner';
+
+const starterImages: StarterImage[] = [
+  {
+    imageUrl: 'https://replicate.delivery/pbxt/N55l5TWGh8mSlNzW8usReoaNhGbFwvLeZR3TX1NL4pd2Wtfv/replicate-prediction-f2d25rg6gnrma0cq257vdw2n4c.png',
+    suggestedPrompt: 'make it into a 90s cartoon',
+  },
+  {
+    imageUrl: 'https://replicate.delivery/pbxt/N5cepICxyaagdvULl0phi7ImdxuFz05TR2l623zqxhNR9q5Y/van-gogh.jpeg',
+    suggestedPrompt: 'Using this style, a panda astronaut riding a unicorn',
+  },
+  {
+    imageUrl: 'https://replicate.delivery/xezq/OKWfR6jlQwzekkSsfQOppX55O3vaNv6xZ4qY6RfHjwQHOwDTB/tmp9p3v3brc.png',
+    suggestedPrompt: 'remove the text from the sweatshirt',
+  },
+  {
+    imageUrl: 'https://replicate.delivery/pbxt/N5trWTJCJQbJVWz5nhLEscS1w16r1hGl5zuWceJhVSnWZfGu/mona-lisa-1024.jpg',
+    suggestedPrompt: 'close her eyes',
+  },
+  {
+    imageUrl: 'https://replicate.delivery/mgxm/b033ff07-1d2e-4768-a137-6c16b5ed4bed/d_1.png',
+    suggestedPrompt: 'Convert to a high-quality restoration, enhancing details and removing any damage or degradation',
+  }
 ];
-
-function PoweredByBanner() {
-  return (
-    <div className="bg-yellow-500 text-white text-center text-base md:text-lg py-2">
-      <a
-        href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline"
-      >
-        Powered by Nano-Banana on Replicate
-      </a>
-    </div>
-  );
-}
 
 export default function ImageUpload({
   onFileUpload,

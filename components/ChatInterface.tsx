@@ -1,21 +1,7 @@
-import React from 'react';
-import { ChatInterfaceProps } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-
-function PoweredByBanner() {
-  return (
-    <div className="bg-yellow-500 text-white text-center text-base md:text-lg py-2">
-      <a
-        href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline"
-      >
-        Powered by Nano-Banana on Replicate
-      </a>
-    </div>
-  );
-}
+import React from 'react';
+import { ChatInterfaceProps } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import PoweredByBanner from '@/components/PoweredByBanner';
 
 export default function ChatInterface({
   messages,
@@ -59,7 +45,7 @@ export default function ChatInterface({
   }, [messages]);
 
   return (
-    <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg overflow-hidden flex flex-col h-full relative">
+    <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg overflow-hidden flex flex-col min-h-screen md:h-full relative">
       {/* Chat Header with Logo */}
       <div className="p-4 md:p-2 border-b border-yellow-300 relative flex items-center flex-shrink-0">
         <Button
@@ -97,7 +83,7 @@ export default function ChatInterface({
       <PoweredByBanner />
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 pb-56 md:pb-6" ref={chatContainerRef}>
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 pb-32 md:pb-6" ref={chatContainerRef}>
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -167,7 +153,7 @@ export default function ChatInterface({
       </div>
 
       {/* Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 bg-yellow-100/90 backdrop-blur-sm border-t border-yellow-300 p-4 md:relative md:border-t md:bg-yellow-100 md:backdrop-blur-none" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'}}>
+      <div className="fixed bottom-0 left-0 right-0 bg-yellow-100/90 backdrop-blur-sm border-t border-yellow-300 p-4 md:relative md:border-t md:bg-yellow-100 md:backdrop-blur-none" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 1rem))'}}>
         <form onSubmit={onSendMessage} className="flex items-end gap-3 max-w-4xl mx-auto">
           <div className="flex-1 relative">
             <div className="bg-yellow-50 rounded-3xl px-4 py-3 pr-12 border-2 border-yellow-300 focus-within:border-yellow-500 focus-within:ring-2 focus-within:ring-yellow-200 transition-all duration-200 shadow-sm">
