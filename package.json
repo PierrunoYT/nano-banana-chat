@@ -1,0 +1,13 @@
+{
+  "name": "nano-banana-chat",
+  "version": "1.0.0",
+  "description": "AI Image Editor powered by Nano-Banana on Replicate",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
