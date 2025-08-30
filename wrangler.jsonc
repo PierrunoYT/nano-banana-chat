@@ -38,12 +38,7 @@
          * Note: Use secrets to store sensitive data.
          * https://developers.cloudflare.com/workers/configuration/secrets/
          *
-         * Required secrets for this project:
-         * - REPLICATE_API_TOKEN: Your Replicate API token for image generation
-         * - CLOUDFLARE_ACCOUNT_ID: Your Cloudflare account ID for Images API
-         * - CLOUDFLARE_IMAGES_API_TOKEN: Your Cloudflare Images API token
-         *
-         * Set these using: wrangler secret put <SECRET_NAME>
+         * No secrets required - users provide their own Replicate API tokens via the UI
          */
 
         /**
