@@ -1,8 +1,12 @@
-# Vercel Deployment Guide
+# Nano-Banana Chat - Vercel Deployment
 
-This AI Image Editor is now Vercel-ready! 🍌
+Beautiful banana-themed AI Image Editor powered by Google's Nano-Banana model! 🍌
 
 ## Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/PierrunoYT/nano-banana-chat)
+
+**Or manually:**
 
 1. **Fork/Clone this repository**
 
@@ -14,7 +18,7 @@ This AI Image Editor is now Vercel-ready! 🍌
 
 3. **Deploy:**
    ```bash
-   vercel --prod
+   npm run deploy
    ```
 
 4. **That's it!** Your banana-themed AI Image Editor is live!
@@ -26,14 +30,17 @@ This AI Image Editor is now Vercel-ready! 🍌
 npm install -g vercel
 
 # Start local development server
-npm run vercel-dev
+npm run dev
 ```
+
+Visit `http://localhost:3000`
 
 ## Features
 
-✅ **Full Vercel Compatibility**
+✅ **Pure Vercel Deployment**
 - Serverless API routes in `/api/generate-image.js`
 - Static frontend served from `/public/`
+- No Cloudflare dependencies
 - CORS configured for cross-origin requests
 
 ✅ **Beautiful Banana Theme**
@@ -47,15 +54,22 @@ npm run vercel-dev
 - User brings their own Replicate API token
 - Secure token handling (never stored server-side)
 
-## How it Works
+## Architecture
 
-1. **Frontend:** Static React app with Tailwind CSS
-2. **Backend:** Vercel serverless function at `/api/generate-image`
+1. **Frontend:** Static React app with Tailwind CSS (`/public/`)
+2. **Backend:** Vercel serverless function (`/api/generate-image.js`)
 3. **AI Model:** Google Nano-Banana via Replicate API
-4. **Storage:** No server storage needed - uses Replicate URLs directly
+4. **Storage:** Direct Replicate URLs (no server storage needed)
 
 ## Environment Variables
 
-No environment variables needed! Users provide their own Replicate API tokens via the UI.
+None required! Users provide their own Replicate API tokens via the UI for maximum security.
 
-Enjoy your banana-themed AI image editor! 🎨🍌
+## Tech Stack
+
+- **Frontend:** Vanilla React + Tailwind CSS
+- **Backend:** Vercel Serverless Functions
+- **AI:** Google Nano-Banana via Replicate
+- **Deployment:** Vercel
+
+Enjoy your banana-themed AI image editor! 🎨🍌✨
