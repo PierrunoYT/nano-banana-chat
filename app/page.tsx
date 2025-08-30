@@ -60,14 +60,31 @@ export default function App() {
   const [abortController, setAbortController] = React.useState<AbortController | null>(null);
   const [starterUsed, setStarterUsed] = React.useState(false);
   
-  // Replicate API token state
+  // API provider state
+  const [apiProvider, setApiProvider] = React.useState<'replicate' | 'fal'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('apiProvider') as 'replicate' | 'fal') || 'replicate';
+    }
+    return 'replicate';
+  });
+  
+  // API token states
   const [replicateToken, setReplicateToken] = React.useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('replicateApiToken') || '';
     }
     return '';
   });
-  const [showTokenModal, setShowTokenModal] = React.useState(!replicateToken);
+  
+  const [falToken, setFalToken] = React.useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('falApiToken') || '';
+    }
+    return '';
+  });
+  
+  const currentToken = apiProvider === 'replicate' ? replicateToken : falToken;
+  const [showTokenModal, setShowTokenModal] = React.useState(!currentToken);
   const [tokenInput, setTokenInput] = React.useState('');
   const [tokenError, setTokenError] = React.useState('');
 
@@ -303,7 +320,7 @@ export default function App() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const lastImageBlob = getLastImageBlob();
-    if (!input.trim() || loading || !lastImageBlob || !replicateToken) return;
+    if (!input.trim() || loading || !lastImageBlob || !currentToken) return;
 
     const userMsg: Message = { type: 'text', text: input, from: 'user', id: Date.now() };
     setMessages(prev => [...prev, userMsg]);
@@ -327,11 +344,14 @@ export default function App() {
         input_image: imageDataUrl
       };
 
-      const res = await fetch('/api/generate-image', {
+      const apiEndpoint = apiProvider === 'replicate' ? '/api/generate-image' : '/api/generate-image-fal';
+      const tokenHeader = apiProvider === 'replicate' ? 'X-Replicate-Api-Token' : 'X-Fal-Api-Token';
+      
+      const res = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json', 
-          'X-Replicate-Api-Token': replicateToken 
+          [tokenHeader]: currentToken 
         },
         body: JSON.stringify(requestBody),
         signal: controller.signal
@@ -481,49 +501,103 @@ export default function App() {
   }, [showUpload]);
 
   React.useEffect(() => {
-    if (!replicateToken) {
+    if (!currentToken) {
       setShowTokenModal(true);
     } else {
       setShowTokenModal(false);
     }
-  }, [replicateToken]);
+  }, [currentToken, apiProvider]);
 
   function handleTokenSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!tokenInput.trim()) {
-      setTokenError('Please enter your Replicate API token.');
+      setTokenError(`Please enter your ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token.`);
       return;
     }
-    localStorage.setItem('replicateApiToken', tokenInput.trim());
-    setReplicateToken(tokenInput.trim());
+    
+    if (apiProvider === 'replicate') {
+      localStorage.setItem('replicateApiToken', tokenInput.trim());
+      setReplicateToken(tokenInput.trim());
+    } else {
+      localStorage.setItem('falApiToken', tokenInput.trim());
+      setFalToken(tokenInput.trim());
+    }
+    
     setShowTokenModal(false);
     setTokenInput('');
     setTokenError('');
   }
 
   function handleTokenLogout() {
-    localStorage.removeItem('replicateApiToken');
-    setReplicateToken('');
+    if (apiProvider === 'replicate') {
+      localStorage.removeItem('replicateApiToken');
+      setReplicateToken('');
+    } else {
+      localStorage.removeItem('falApiToken');
+      setFalToken('');
+    }
     setShowTokenModal(true);
+  }
+
+  function handleProviderChange(provider: 'replicate' | 'fal') {
+    setApiProvider(provider);
+    localStorage.setItem('apiProvider', provider);
+    const token = provider === 'replicate' ? replicateToken : falToken;
+    if (!token) {
+      setShowTokenModal(true);
+    }
   }
 
   return (
     <div className="h-full w-full overflow-hidden">
-      {/* Replicate API Token Modal */}
+      {/* API Token Modal */}
       {showTokenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-yellow-100 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
             <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
-            <h2 className="text-xl font-bold mb-2 text-center">Enter your Replicate API Token</h2>
+            
+            {/* Provider Selection */}
+            <div className="flex gap-2 mb-4">
+              <Button
+                type="button"
+                variant={apiProvider === 'replicate' ? 'default' : 'outline'}
+                onClick={() => handleProviderChange('replicate')}
+                className="px-4 py-2"
+              >
+                Replicate
+              </Button>
+              <Button
+                type="button"
+                variant={apiProvider === 'fal' ? 'default' : 'outline'}
+                onClick={() => handleProviderChange('fal')}
+                className="px-4 py-2"
+              >
+                FAL.ai
+              </Button>
+            </div>
+            
+            <h2 className="text-xl font-bold mb-2 text-center">
+              Enter your {apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API Token
+            </h2>
             <p className="text-gray-700 text-center mb-4">
-              To use AI Image Editor, you'll need a Replicate API token.<br />
-              <a href="https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" target="_blank" rel="noopener noreferrer" className="underline text-yellow-600">Create a token here</a> and paste it below.
+              To use AI Image Editor, you'll need a {apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token.<br />
+              <a 
+                href={apiProvider === 'replicate' 
+                  ? "https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" 
+                  : "https://fal.ai/dashboard/keys"
+                } 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="underline text-yellow-600"
+              >
+                Create a token here
+              </a> and paste it below.
             </p>
             <form onSubmit={handleTokenSubmit} className="w-full flex flex-col items-center">
               <input
                 type="text"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-2 text-base"
-                placeholder="Paste your Replicate API token"
+                placeholder={`Paste your ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token`}
                 value={tokenInput}
                 onChange={e => setTokenInput(e.target.value)}
                 autoFocus
@@ -644,19 +718,24 @@ export default function App() {
                 onClick={resetApp}
                 title="Back to upload"
               />
-              {replicateToken && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleTokenLogout}
-                  className="absolute right-4 w-8 h-8 bg-gray-200 hover:bg-red-500 text-gray-700 hover:text-white rounded-full transition-all duration-200"
-                  title="Remove Replicate API Token"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </Button>
-              )}
+              <div className="absolute right-4 flex items-center gap-2">
+                <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+                  {apiProvider === 'replicate' ? 'Replicate' : 'FAL.ai'}
+                </span>
+                {currentToken && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleTokenLogout}
+                    className="w-8 h-8 bg-gray-200 hover:bg-red-500 text-gray-700 hover:text-white rounded-full transition-all duration-200"
+                    title={`Remove ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API Token`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </Button>
+                )}
+              </div>
             </div>
             <PoweredByBanner />
 
