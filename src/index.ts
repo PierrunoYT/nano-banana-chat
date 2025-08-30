@@ -64,19 +64,20 @@ app.post('/generate-image', async (c) => {
                         return c.json({ error: 'Missing Replicate API token. Please provide it in the X-Replicate-Api-Token header.' }, 400);
                 }
                 const replicate = new Replicate({ auth: userToken });
-                const model = 'black-forest-labs/flux-kontext-pro';
+                const model = 'google/nano-banana';
 
                 const { prompt, input_image } = await c.req.json();
 
-                // Generate image with Replicate
-                const output = await replicate.run(model, {
-                        input: {
-                                prompt,
-                                input_image,
-                        },
-                });
+                // Generate image with Replicate using nano-banana model
+                const input = {
+                        prompt,
+                        image_input: [input_image], // nano-banana expects an array of images
+                        output_format: "jpg" // Set output format to jpg (default)
+                };
 
-                const replicateImageUrl = output as string;
+                const output = await replicate.run(model, { input });
+
+                const replicateImageUrl = output.url();
 
                 // Upload to Cloudflare Images for permanent storage
                 const cloudflareImageUrl = await uploadToCloudflareImages(

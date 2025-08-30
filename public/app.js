@@ -25,12 +25,12 @@ function PoweredByBanner() {
   return (
     <div className="bg-orange-500 text-white text-center text-base md:text-lg py-2">
       <a
-        href="https://replicate.com/black-forest-labs/flux-kontext-pro?utm_source=project&utm_campaign=kontext-chat"
+        href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat"
         target="_blank"
         rel="noopener noreferrer"
         className="underline"
       >
-        Powered by FLUX.1 Kontext on Replicate
+        Powered by Nano-Banana on Replicate
       </a>
     </div>
   );
@@ -491,10 +491,10 @@ function App() {
       {showTokenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
-            <img src="/kontext-chat-rainbow.png" className="w-1/3 mx-auto mb-4" alt="Kontext Chat" />
+            <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" />
             <h2 className="text-xl font-bold mb-2 text-center">Enter your Replicate API Token</h2>
-            <p className="text-gray-700 text-center mb-4">To use Kontext Chat, you'll need a Replicate API token.<br />
-              <a href="https://replicate.com/account/api-tokens?new-token-name=kontext-chat" target="_blank" rel="noopener noreferrer" className="underline text-orange-600">Create a token here</a> and paste it below.
+            <p className="text-gray-700 text-center mb-4">To use AI Image Editor, you'll need a Replicate API token.<br />
+              <a href="https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" target="_blank" rel="noopener noreferrer" className="underline text-orange-600">Create a token here</a> and paste it below.
             </p>
             <form onSubmit={handleTokenSubmit} className="w-full flex flex-col items-center">
               <input
@@ -523,7 +523,7 @@ function App() {
           <div className="w-full md:max-w-4xl bg-white md:shadow-md flex flex-col h-screen md:h-auto overflow-hidden md:overflow-visible">
             {/* Logo */}
             <div className="p-4 md:p-2 bg-white border-b border-gray-200">
-              <img src="/kontext-chat-rainbow.png" className="w-1/3 md:w-1/4 mx-auto" alt="Kontext Chat" />
+              <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" />
             </div>
             <PoweredByBanner />
 
@@ -531,16 +531,19 @@ function App() {
             <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto md:overflow-visible pb-32 md:pb-6" style={{paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'}}>
               {/* Intro Text */}
               <div className="text-center mb-6">
-                <p className="text-gray-700 text-base md:text-lg">
-                  Chat with images to edit them.
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+                  Transform Images with AI
+                </h1>
+                <p className="text-gray-600 text-base md:text-lg">
+                  Upload an image and describe how you'd like to edit it using natural language.
                 </p>
               </div>
 
               <div
-                className={`border-2 border-dashed rounded-2xl p-6 md:p-12 text-center cursor-pointer mb-12 ${
+                className={`border-2 border-dashed rounded-3xl p-8 md:p-12 text-center cursor-pointer mb-12 transition-all duration-300 ${
                   dragActive
-                    ? 'border-green-400 bg-green-50 text-green-700'
-                    : 'border-gray-300 bg-gray-50 hover:border-orange-400 hover:bg-orange-50 text-gray-700 hover:text-orange-700'
+                    ? 'border-emerald-400 bg-emerald-50 text-emerald-700 scale-105 shadow-lg'
+                    : 'border-gray-300 bg-white hover:border-orange-400 hover:bg-orange-50 text-gray-700 hover:text-orange-700 hover:shadow-lg hover:scale-105'
                 }`}
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -548,8 +551,9 @@ function App() {
                   <svg className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                   </svg>
-                  <h3 className="text-lg md:text-xl mb-1 md:mb-2 font-semibold">Upload an image to get started</h3>
-                  <p className="text-base md:text-lg opacity-80">Drag and drop an image here, or click to browse</p>
+                  <h3 className="text-xl md:text-2xl mb-2 font-bold">Upload Your Image</h3>
+                  <p className="text-base md:text-lg opacity-90 mb-2">Drag and drop an image here, or click to browse</p>
+                  <p className="text-sm text-gray-500">Supports JPG, PNG, GIF • Max 10MB</p>
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -561,12 +565,15 @@ function App() {
               </div>
 
               {/* Starter Images Section */}
-              <div className="text-center text-gray-600 text-base mb-4 font-medium">Or choose a starting image:</div>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <div className="text-center mb-6">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Try These Examples</h2>
+                <p className="text-gray-600 text-base">Click any image to start editing</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {starterImages.map((starter, idx) => (
                   <button
                     key={idx}
-                    className="aspect-square w-full rounded-xl overflow-hidden border-2 border-gray-200 hover:border-orange-400 focus:border-orange-500 transition-all shadow-sm bg-gray-50 group"
+                    className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 shadow-md hover:shadow-xl bg-white group hover:scale-105"
                     onClick={() => handleStarterImageClick(starter)}
                     disabled={loading}
                     title={starter.suggestedPrompt}
@@ -583,7 +590,7 @@ function App() {
               {/* Footer Text */}
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
-                  Kontext Chat is powered by <a href="https://replicate.com/black-forest-labs/flux-kontext-pro?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Flux Kontext Pro</a>, a new image model from <a href="https://black-forest-labs.com/" className="underline text-orange-600 hover:text-orange-700">Black Forest Labs</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-orange-600 hover:text-orange-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-orange-600 hover:text-orange-700">source code</a> on GitHub.
+                  AI Image Editor is powered by <a href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Nano-Banana</a>, an image model from <a href="https://google.com/" className="underline text-orange-600 hover:text-orange-700">Google</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-orange-600 hover:text-orange-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-orange-600 hover:text-orange-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-orange-600 hover:text-orange-700">source code</a> on GitHub.
                 </p>
               </div>
             </div>
@@ -603,9 +610,9 @@ function App() {
                 </svg>
               </button>
               <img 
-                src="/kontext-chat-rainbow.png" 
+                src="/nanobanana.png" 
                 className="w-1/3 md:w-1/4 mx-auto cursor-pointer hover:opacity-90 transition-opacity" 
-                alt="Kontext Chat" 
+                alt="Nano-Banana" 
                 onClick={resetApp}
                 title="Back to upload"
               />
@@ -651,8 +658,14 @@ function App() {
                     )}
                     {msg.type === 'loading' && (
                       <div className="flex flex-col items-center gap-4 py-8 px-12">
-                        <div className="w-16 h-16 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
-                        <span className="text-gray-600">Generating image...</span>
+                        <div className="relative">
+                          <div className="w-16 h-16 border-4 border-gray-200 border-t-orange-500 rounded-full animate-spin"></div>
+                          <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-orange-300 rounded-full animate-spin" style={{animationDelay: '0.2s', animationDuration: '1.5s'}}></div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-gray-700 font-medium">Generating image...</span>
+                          <p className="text-gray-500 text-sm mt-1">This may take a few moments</p>
+                        </div>
                       </div>
                     )}
                     {msg.text && <div className="text-base md:text-lg">{msg.text}</div>}
@@ -675,15 +688,15 @@ function App() {
             </div>
 
             {/* Input Area */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 md:relative md:border-t" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'}}>
+            <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200 p-4 md:relative md:border-t md:bg-white md:backdrop-blur-none" style={{paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'}}>
               <form onSubmit={handleSend} className="flex items-end gap-3 max-w-4xl mx-auto">
                 <div className="flex-1 relative">
-                  <div className="bg-gray-50 rounded-3xl px-4 py-3 pr-12 border-2 border-transparent focus-within:border-orange-500 transition-colors">
+                  <div className="bg-gray-50 rounded-3xl px-4 py-3 pr-12 border-2 border-gray-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-200 transition-all duration-200 shadow-sm">
                     <textarea
                       ref={textareaRef}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder="Describe your edit..."
+                      placeholder="Describe how you'd like to edit this image..."
                       className="w-full bg-transparent border-none outline-none resize-none text-base"
                       rows="1"
                       style={{ minHeight: '24px', maxHeight: '120px' }}
@@ -713,7 +726,7 @@ function App() {
                       <button
                         type="submit"
                         disabled={!input.trim() || loading}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
