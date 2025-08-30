@@ -506,7 +506,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen md:overflow-auto overflow-hidden">
+    <div className="h-full w-full overflow-hidden">
       {/* Replicate API Token Modal */}
       {showTokenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
@@ -537,10 +537,10 @@ function App() {
         </div>
       )}
       {/* Main Content */}
-      <div className="min-h-screen flex flex-col md:flex md:items-center h-screen md:h-auto">
+      <div className="h-full w-full flex flex-col">
         {showUpload ? (
           /* Upload Section */
-          <div className="w-full md:max-w-4xl bg-yellow-100/95 backdrop-blur-sm md:shadow-lg md:rounded-2xl flex flex-col h-screen md:h-auto overflow-hidden md:overflow-visible">
+          <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg flex flex-col h-full overflow-hidden">
             {/* Logo */}
             <div className="p-4 md:p-2 border-b border-yellow-300">
               <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
@@ -562,8 +562,8 @@ function App() {
               <div
                 className={`border-2 border-dashed rounded-3xl p-8 md:p-12 text-center cursor-pointer mb-12 transition-all duration-300 ${
                   dragActive
-                    ? 'border-yellow-400 bg-yellow-200/80 text-yellow-800 scale-105 shadow-lg'
-                    : 'border-yellow-300 bg-yellow-50/60 hover:border-yellow-400 hover:bg-yellow-100/80 text-gray-700 hover:text-yellow-800 hover:shadow-lg hover:scale-105'
+                    ? 'border-yellow-400 bg-yellow-200/90 text-yellow-800 scale-105 shadow-lg'
+                    : 'border-yellow-300 bg-yellow-100/80 hover:border-yellow-400 hover:bg-yellow-200/90 text-gray-700 hover:text-yellow-800 hover:shadow-lg hover:scale-105'
                 }`}
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -612,12 +612,15 @@ function App() {
                 <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
                   AI Image Editor is powered by <a href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, an image model from <a href="https://google.com/" className="underline text-yellow-600 hover:text-yellow-700">Google</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-yellow-600 hover:text-yellow-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub.
                 </p>
+                <div className="mt-16 mb-16 text-center">
+                  <p className="text-gray-500 text-5xl font-bold">Made with 🍌</p>
+                </div>
               </div>
             </div>
           </div>
         ) : (
           /* Chat Section */
-          <div className="w-full md:max-w-4xl bg-yellow-100/95 backdrop-blur-sm md:shadow-lg md:rounded-2xl overflow-hidden flex flex-col h-screen md:h-screen relative">
+          <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg overflow-hidden flex flex-col h-full relative">
             {/* Chat Header with Logo */}
             <div className="p-4 md:p-2 border-b border-yellow-300 relative flex items-center flex-shrink-0">
               <button
