@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { AppProvider } from "@/contexts/AppContext";
 
 export const metadata: Metadata = {
   title: "AI Image Editor - Transform images with AI, powered by Nano-Banana on Replicate",
@@ -40,13 +41,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="h-screen w-screen flex justify-center m-0 p-0 overflow-hidden" 
+      <body className="min-h-screen w-full flex justify-center m-0 p-0" 
             style={{ 
               backgroundImage: "url('/banana-pattern.png')", 
               backgroundSize: "400px 400px", 
               backgroundRepeat: "repeat" 
             }}>
-        {children}
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>
     </html>
   );
