@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,11 +24,12 @@ export const metadata: Metadata = {
     description: "AI Image Editor is a tool for image editing powered by Nano-Banana, an image model from Google, running on Replicate. The app is built with Hono and React, running on Cloudflare Workers. Learn how to build your own app by taking a look at the source code on GitHub.",
     images: ["https://kontext-chat.replicate.dev/kontext-chat.jpg"],
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1.0,
-    viewportFit: "cover",
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  viewportFit: "cover",
   themeColor: "#e04f0c",
 };
 

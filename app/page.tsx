@@ -614,7 +614,7 @@ export default function App() {
                 <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
                   AI Image Editor is powered by <a href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, an image model from <a href="https://google.com/" className="underline text-yellow-600 hover:text-yellow-700">Google</a>, running on <a href="https://replicate.com?utm_source=project&utm_campaign=kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a>. The app is built with Hono and React, running on <a href="https://workers.dev/" className="underline text-yellow-600 hover:text-yellow-700">Cloudflare Workers</a>. Learn how to build your own app by taking a look at the <a href="https://github.com/replicate/kontext-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub.
                 </p>
-                <div className="mt-16 mb-16 text-center">
+                <div className="mt-24 mb-16 flex justify-center">
                   <p className="text-gray-500 text-5xl font-bold">Made with 🍌</p>
                 </div>
               </div>
