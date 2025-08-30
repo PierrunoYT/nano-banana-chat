@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "public",
   "functions": {
     "api/generate-image.js": {
       "maxDuration": 30
@@ -7,7 +9,7 @@
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/public/$1"
     }
   ],

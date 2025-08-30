@@ -1,53 +1,104 @@
-# Kontext Chat
+# Nano-Banana Chat 🍌
 
-A chat app that generates images using Replicate and Cloudflare Workers.
+A beautiful banana-themed AI Image Editor powered by Google's Nano-Banana model via Replicate.
 
-Kontext Chat is powered by [FLUX.1 Kontext Pro](https://replicate.com/black-forest-labs/flux-kontext-pro), a new image model from Black Forest Labs, running on [Replicate](https://replicate.com/black-forest-labs/flux-kontext-pro). The app is built with Hono and React and it deployed on [Cloudflare Workers](https://workers.dev/).
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/PierrunoYT/nano-banana-chat)
 
-See [kontext-chat.replicate.dev](https://kontext-chat.replicate.dev/) for a live demo.
+## ✨ Features
 
-## Local Development
+- 🍌 **Beautiful Banana Theme** - Seamless banana pattern background with complete yellow UI
+- 🎨 **AI Image Generation** - Powered by Google's Nano-Banana model via Replicate
+- ⬇️ **Download Functionality** - Save generated images with smart filenames
+- 📱 **Responsive Design** - Works perfectly on desktop and mobile
+- 🔐 **Secure** - Users provide their own Replicate API tokens (never stored server-side)
+- 🚀 **Fast Deployment** - One-click Vercel deployment
 
-1. Install dependencies:
-   ```sh
-   npm install
+## 🎯 Tech Stack
+
+- **Frontend:** Vanilla React + Tailwind CSS
+- **Backend:** Vercel Serverless Functions
+- **AI Model:** Google Nano-Banana via Replicate API
+- **Deployment:** Vercel
+
+## 🚀 Quick Deploy
+
+### One-Click Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/PierrunoYT/nano-banana-chat)
+
+### Manual Deploy
+1. Fork this repository
+2. Connect to Vercel: `npx vercel --login`
+3. Deploy: `npm run deploy`
+
+## 💻 Local Development
+
+1. **Install Vercel CLI:**
+   ```bash
+   npm install -g vercel
    ```
 
-1. Get a Replicate API Token:
-   - Sign up at https://replicate.com/ and get your REPLICATE_API_TOKEN from your account settings at https://replicate.com/account/api-tokens.
-
-1. Set up your local environment:
-   - Create a .dev.vars file in the project root (already present in this repo) and add your token:
-     ```
-     REPLICATE_API_TOKEN=your-token-here
-     ```
-
-1. Start the local dev server:
-   ```sh
+2. **Clone and start:**
+   ```bash
+   git clone https://github.com/PierrunoYT/nano-banana-chat.git
+   cd nano-banana-chat
    npm run dev
    ```
-   - The app will be available at http://localhost:8787 by default.
 
-## Deployment to Cloudflare
+3. **Visit:** `http://localhost:3000`
 
-1. Authenticate Wrangler:
-   ```sh
-   npx wrangler login
-   ```
+## 🔑 Getting Started
 
-1. Set your Replicate API token as a secret:
-   ```sh
-   npx wrangler secret put REPLICATE_API_TOKEN
-   ```
+1. **Get a Replicate API Token:**
+   - Sign up at [replicate.com](https://replicate.com)
+   - Get your token from [API settings](https://replicate.com/account/api-tokens)
 
-1. Deploy:
-   ```sh
-   npm run deploy
-   ```
-   - Your app will be deployed to your Cloudflare Workers account.
+2. **Use the App:**
+   - Enter your Replicate API token when prompted
+   - Upload an image or select from examples
+   - Describe your desired edits
+   - Download your AI-generated results!
 
-## Notes
+## 🏗️ Architecture
 
-- The frontend is served from the public/ directory.
-- The backend is a Cloudflare Worker (entry: src/index.ts).
-- The app requires a valid REPLICATE_API_TOKEN to function.
+```
+├── api/
+│   └── generate-image.js    # Vercel serverless function
+├── public/
+│   ├── index.html          # Main app page
+│   ├── app.js              # React frontend
+│   ├── banana-pattern.png  # Background pattern
+│   └── nanobanana.png      # Logo
+├── vercel.json             # Vercel configuration
+└── package.json            # Dependencies
+```
+
+## 🔒 Security
+
+- **No server-side token storage** - Users provide tokens via UI
+- **CORS configured** for secure cross-origin requests
+- **Client-side token management** with localStorage
+
+## 🎨 Customization
+
+The banana theme can be customized by modifying:
+- `banana-pattern.png` - Background pattern
+- `nanobanana.png` - Logo
+- Yellow color scheme in `app.js`
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+**Made with 🍌 by the community**
+
+Enjoy creating amazing AI-generated images with the beautiful banana-themed interface!
