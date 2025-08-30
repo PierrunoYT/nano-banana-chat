@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fal } from '@fal-ai/client';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,6 +9,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Dynamic import to avoid webpack issues
+    const { fal } = await import('@fal-ai/client');
 
     // Configure fal client with user token
     fal.config({

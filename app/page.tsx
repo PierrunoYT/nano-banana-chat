@@ -84,7 +84,7 @@ export default function App() {
   });
   
   const currentToken = apiProvider === 'replicate' ? replicateToken : falToken;
-  const [showTokenModal, setShowTokenModal] = React.useState(!currentToken);
+  const [showSettings, setShowSettings] = React.useState(false);
   const [tokenInput, setTokenInput] = React.useState('');
   const [tokenError, setTokenError] = React.useState('');
 
@@ -320,7 +320,17 @@ export default function App() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const lastImageBlob = getLastImageBlob();
-    if (!input.trim() || loading || !lastImageBlob || !currentToken) return;
+    if (!input.trim() || loading || !lastImageBlob) return;
+    
+    if (!currentToken) {
+      setMessages(prev => [...prev, {
+        type: 'text',
+        text: 'Please configure your API token in Settings to use AI image generation.',
+        from: 'assistant',
+        id: Date.now()
+      }]);
+      return;
+    }
 
     const userMsg: Message = { type: 'text', text: input, from: 'user', id: Date.now() };
     setMessages(prev => [...prev, userMsg]);
@@ -500,13 +510,6 @@ export default function App() {
     }
   }, [showUpload]);
 
-  React.useEffect(() => {
-    if (!currentToken) {
-      setShowTokenModal(true);
-    } else {
-      setShowTokenModal(false);
-    }
-  }, [currentToken, apiProvider]);
 
   function handleTokenSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -523,7 +526,7 @@ export default function App() {
       setFalToken(tokenInput.trim());
     }
     
-    setShowTokenModal(false);
+    setShowSettings(false);
     setTokenInput('');
     setTokenError('');
   }
@@ -536,25 +539,39 @@ export default function App() {
       localStorage.removeItem('falApiToken');
       setFalToken('');
     }
-    setShowTokenModal(true);
   }
 
   function handleProviderChange(provider: 'replicate' | 'fal') {
     setApiProvider(provider);
     localStorage.setItem('apiProvider', provider);
-    const token = provider === 'replicate' ? replicateToken : falToken;
-    if (!token) {
-      setShowTokenModal(true);
-    }
+    setTokenError('');
+  }
+
+  function openSettings() {
+    setShowSettings(true);
+    setTokenInput('');
+    setTokenError('');
   }
 
   return (
     <div className="h-full w-full overflow-hidden">
-      {/* API Token Modal */}
-      {showTokenModal && (
+      {/* Settings Panel */}
+      {showSettings && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-yellow-100 rounded-2xl shadow-xl p-8 max-w-md w-full flex flex-col items-center">
-            <img src="/nanobanana.png" className="w-1/3 mx-auto mb-4" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
+            <div className="flex items-center justify-between w-full mb-4">
+              <h2 className="text-xl font-bold">API Settings</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowSettings(false)}
+                className="w-8 h-8 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </Button>
+            </div>
             
             {/* Provider Selection */}
             <div className="flex gap-2 mb-4">
@@ -576,11 +593,10 @@ export default function App() {
               </Button>
             </div>
             
-            <h2 className="text-xl font-bold mb-2 text-center">
-              Enter your {apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API Token
-            </h2>
-            <p className="text-gray-700 text-center mb-4">
-              To use AI Image Editor, you'll need a {apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token.<br />
+            <h3 className="text-lg font-semibold mb-2 text-center">
+              {apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API Token
+            </h3>
+            <p className="text-gray-700 text-center mb-4 text-sm">
               <a 
                 href={apiProvider === 'replicate' 
                   ? "https://replicate.com/account/api-tokens?new-token-name=ai-image-editor" 
@@ -590,23 +606,40 @@ export default function App() {
                 rel="noopener noreferrer" 
                 className="underline text-yellow-600"
               >
-                Create a token here
-              </a> and paste it below.
+                Get your API token here
+              </a>
             </p>
             <form onSubmit={handleTokenSubmit} className="w-full flex flex-col items-center">
               <input
-                type="text"
+                type="password"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-2 text-base"
-                placeholder={`Paste your ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token`}
+                placeholder={`${currentToken ? 'Update' : 'Enter'} your ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API token`}
                 value={tokenInput}
                 onChange={e => setTokenInput(e.target.value)}
                 autoFocus
               />
               {tokenError && <div className="text-red-600 text-sm mb-2">{tokenError}</div>}
-              <Button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white">
-                Save Token
-              </Button>
+              <div className="flex gap-2 w-full">
+                <Button type="submit" className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white">
+                  Save Token
+                </Button>
+                {currentToken && (
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleTokenLogout}
+                    className="px-4 border-red-300 text-red-600 hover:bg-red-50"
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
             </form>
+            {currentToken && (
+              <div className="text-green-600 text-sm mt-2 text-center">
+                ✓ API token configured
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -617,8 +650,20 @@ export default function App() {
           /* Upload Section */
           <div className="w-full md:max-w-4xl md:mx-auto bg-yellow-100/95 backdrop-blur-sm md:shadow-lg flex flex-col h-full overflow-hidden">
             {/* Logo */}
-            <div className="p-4 md:p-2 border-b border-yellow-300">
+            <div className="p-4 md:p-2 border-b border-yellow-300 relative">
               <img src="/nanobanana.png" className="w-1/3 md:w-1/4 mx-auto" alt="Nano-Banana" style={{mixBlendMode: 'multiply'}} />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={openSettings}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-yellow-200 hover:bg-yellow-300 text-gray-700 rounded-full"
+                title="API Settings"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </Button>
             </div>
             <PoweredByBanner />
 
@@ -718,24 +763,18 @@ export default function App() {
                 onClick={resetApp}
                 title="Back to upload"
               />
-              <div className="absolute right-4 flex items-center gap-2">
-                <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
-                  {apiProvider === 'replicate' ? 'Replicate' : 'FAL.ai'}
-                </span>
-                {currentToken && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleTokenLogout}
-                    className="w-8 h-8 bg-gray-200 hover:bg-red-500 text-gray-700 hover:text-white rounded-full transition-all duration-200"
-                    title={`Remove ${apiProvider === 'replicate' ? 'Replicate' : 'FAL'} API Token`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </Button>
-                )}
-              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={openSettings}
+                className="absolute right-4 w-8 h-8 bg-yellow-200 hover:bg-yellow-300 text-gray-700 rounded-full transition-all duration-200"
+                title="API Settings"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </Button>
             </div>
             <PoweredByBanner />
 
