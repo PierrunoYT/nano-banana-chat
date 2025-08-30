@@ -13,7 +13,7 @@ export default function PoweredByBanner({ onOpenSettings }: PoweredByBannerProps
         rel="noopener noreferrer"
         className="underline"
       >
-        Powered by Nano-Banana on Replicate
+        Powered by Nano-Banana on Replicate & FAL
       </a>
       {onOpenSettings && (
         <Button

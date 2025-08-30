@@ -1,31 +1,8 @@
-import React from 'react';
-import { ImageUploadProps, StarterImage } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-import { SecurityFeatures } from './SecurityFeatures';
-import PoweredByBanner from '@/components/PoweredByBanner';
-
-const starterImages: StarterImage[] = [
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N55l5TWGh8mSlNzW8usReoaNhGbFwvLeZR3TX1NL4pd2Wtfv/replicate-prediction-f2d25rg6gnrma0cq257vdw2n4c.png',
-    suggestedPrompt: 'make it into a 90s cartoon',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N5cepICxyaagdvULl0phi7ImdxuFz05TR2l623zqxhNR9q5Y/van-gogh.jpeg',
-    suggestedPrompt: 'Using this style, a panda astronaut riding a unicorn',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/xezq/OKWfR6jlQwzekkSsfQOppX55O3vaNv6xZ4qY6RfHjwQHOwDTB/tmp9p3v3brc.png',
-    suggestedPrompt: 'remove the text from the sweatshirt',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/pbxt/N5trWTJCJQbJVWz5nhLEscS1w16r1hGl5zuWceJhVSnWZfGu/mona-lisa-1024.jpg',
-    suggestedPrompt: 'close her eyes',
-  },
-  {
-    imageUrl: 'https://replicate.delivery/mgxm/b033ff07-1d2e-4768-a137-6c16b5ed4bed/d_1.png',
-    suggestedPrompt: 'Convert to a high-quality restoration, enhancing details and removing any damage or degradation',
-  }
-];
+import React from 'react';
+import { ImageUploadProps } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { SecurityFeatures } from './SecurityFeatures';
+import PoweredByBanner from '@/components/PoweredByBanner';
 
 export default function ImageUpload({
   onFileUpload,
@@ -112,30 +89,6 @@ export default function ImageUpload({
               onChange={handleFileSelect}
             />
           </div>
-        </div>
-
-        {/* Starter Images Section */}
-        <div className="text-center mb-6">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Try These Examples</h2>
-          <p className="text-gray-600 text-base">Click any image to start editing</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {starterImages.map((starter, idx) => (
-            <Button
-              key={idx}
-              variant="ghost"
-              className="aspect-square w-full rounded-2xl overflow-hidden border-2 border-yellow-200 hover:border-yellow-400 focus:border-yellow-500 transition-all duration-300 shadow-md hover:shadow-xl bg-yellow-50 group hover:scale-105 p-0"
-              onClick={() => onStarterImageClick(starter)}
-              disabled={loading}
-              title={starter.suggestedPrompt}
-            >
-              <img
-                src={starter.imageUrl}
-                alt={starter.suggestedPrompt}
-                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
-              />
-            </Button>
-          ))}
         </div>
 
         {/* Security Features */}
