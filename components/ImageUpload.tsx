@@ -53,17 +53,17 @@ export default function ImageUpload({
       {/* Upload Area */}
       <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto pb-24 md:pb-12">
         {/* Intro Text */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+        <div className="text-center mb-4">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
             Transform Images with AI
           </h1>
-          <p className="text-gray-600 text-base md:text-lg">
+          <p className="text-gray-600 text-sm md:text-base">
             Upload an image and describe how you'd like to edit it using natural language.
           </p>
         </div>
 
         <div
-          className={`border-2 border-dashed rounded-3xl p-8 md:p-12 text-center cursor-pointer mb-12 transition-all duration-300 ${
+          className={`border-2 border-dashed rounded-3xl p-6 md:p-8 text-center cursor-pointer mb-6 transition-all duration-300 ${
             dragActive
               ? 'border-yellow-400 bg-yellow-200/90 text-yellow-800 scale-105 shadow-lg'
               : 'border-yellow-300 bg-yellow-100/80 hover:border-yellow-400 hover:bg-yellow-200/90 text-gray-700 hover:text-yellow-800 hover:shadow-lg hover:scale-105'
@@ -92,19 +92,28 @@ export default function ImageUpload({
         </div>
 
         {/* Security Features */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="mt-4 pt-4 border-t border-gray-200">
           <SecurityFeatures />
           
           {/* Footer Text */}
-          <div className="mt-8">
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
-              Transform your images with AI using <a href="https://replicate.com/google/nano-banana" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, Google's powerful image editing model. Choose between <a href="https://replicate.com" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a> or <a href="https://fal.ai" className="underline text-yellow-600 hover:text-yellow-700">FAL.ai</a> as your AI provider. Built with <a href="https://nextjs.org" className="underline text-yellow-600 hover:text-yellow-700">Next.js</a> and <a href="https://tailwindcss.com" className="underline text-yellow-600 hover:text-yellow-700">Tailwind CSS</a> for a smooth editing experience. Check out the <a href="https://github.com/PierrunoYT/nano-banana-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub to build your own AI image editor.
+          <div className="mt-4">
+            <p className="text-gray-600 text-sm leading-relaxed text-center">
+              Transform your images with AI using <a href="https://replicate.com/google/nano-banana" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, Google's powerful image editing model. Choose between <a href="https://replicate.com" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a> or <a href="https://fal.ai" className="underline text-yellow-600 hover:text-yellow-700">FAL</a> as your AI provider. Built with <a href="https://nextjs.org" className="underline text-yellow-600 hover:text-yellow-700">Next.js</a> and <a href="https://tailwindcss.com" className="underline text-yellow-600 hover:text-yellow-700">Tailwind CSS</a> for a smooth editing experience. Check out the <a href="https://github.com/PierrunoYT/nano-banana-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub to build your own AI image editor.
             </p>
           </div>
           
           {/* Made with Banana */}
-          <div className="mt-8 mb-8 flex justify-center">
-            <p className="text-gray-500 text-5xl font-bold">Made with 🍌</p>
+          <div className="mt-3 mb-2 flex justify-center">
+            <p className="text-gray-500 text-3xl font-bold">Made with 🍌</p>
+          </div>
+          
+          {/* Banana Animation */}
+          <div className="flex justify-center mb-4">
+            <img 
+              src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzF5c2QyNHR0czA2Y3p5amhyOHc0djhodGpkYzAxZ2V3YnR0aTd0YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bh4jzePjmd9iE/giphy.gif" 
+              alt="Dancing banana" 
+              className="w-full h-64 md:h-80 object-contain max-w-md mx-auto"
+            />
           </div>
         </div>
       </div>
