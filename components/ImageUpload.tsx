@@ -137,17 +137,21 @@ export default function ImageUpload({
           ))}
         </div>
 
-        {/* Footer Text */}
+        {/* Security Features */}
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
-            Transform your images with AI using <a href="https://replicate.com/google/nano-banana" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, Google's powerful image editing model. Choose between <a href="https://replicate.com" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a> or <a href="https://fal.ai" className="underline text-yellow-600 hover:text-yellow-700">FAL.ai</a> as your AI provider. Built with <a href="https://nextjs.org" className="underline text-yellow-600 hover:text-yellow-700">Next.js</a> and <a href="https://tailwindcss.com" className="underline text-yellow-600 hover:text-yellow-700">Tailwind CSS</a> for a smooth editing experience. Check out the <a href="https://github.com/PierrunoYT/nano-banana-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub to build your own AI image editor.
-          </p>
-          <div className="mt-24 mb-8 flex justify-center">
-            <p className="text-gray-500 text-5xl font-bold">Made with 🍌</p>
+          <SecurityFeatures />
+          
+          {/* Footer Text */}
+          <div className="mt-8">
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed text-center">
+              Transform your images with AI using <a href="https://replicate.com/google/nano-banana" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, Google's powerful image editing model. Choose between <a href="https://replicate.com" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a> or <a href="https://fal.ai" className="underline text-yellow-600 hover:text-yellow-700">FAL.ai</a> as your AI provider. Built with <a href="https://nextjs.org" className="underline text-yellow-600 hover:text-yellow-700">Next.js</a> and <a href="https://tailwindcss.com" className="underline text-yellow-600 hover:text-yellow-700">Tailwind CSS</a> for a smooth editing experience. Check out the <a href="https://github.com/PierrunoYT/nano-banana-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub to build your own AI image editor.
+            </p>
           </div>
           
-          {/* Security Features */}
-          <SecurityFeatures />
+          {/* Made with Banana */}
+          <div className="mt-8 mb-8 flex justify-center">
+            <p className="text-gray-500 text-5xl font-bold">Made with 🍌</p>
+          </div>
         </div>
       </div>
     </div>
