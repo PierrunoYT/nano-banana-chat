@@ -69,6 +69,7 @@ export interface ChatInterfaceProps {
   onDownloadImage: (imageUrl: string) => void;
   onResetApp: () => void;
   hasApiToken: boolean;
+  onOpenSettings: () => void;
 }
 
 export interface SettingsPanelProps {

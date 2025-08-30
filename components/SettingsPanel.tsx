@@ -36,17 +36,23 @@ export default function SettingsPanel({
         <div className="flex gap-2 mb-4">
           <Button
             type="button"
-            variant={apiProvider === 'replicate' ? 'default' : 'outline'}
             onClick={() => onProviderChange('replicate')}
-            className="px-4 py-2"
+            className={`px-4 py-2 ${
+              apiProvider === 'replicate' 
+                ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+            }`}
           >
             Replicate
           </Button>
           <Button
             type="button"
-            variant={apiProvider === 'fal' ? 'default' : 'outline'}
             onClick={() => onProviderChange('fal')}
-            className="px-4 py-2"
+            className={`px-4 py-2 ${
+              apiProvider === 'fal' 
+                ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+            }`}
           >
             FAL.ai
           </Button>
