@@ -100,6 +100,9 @@ export default function ImageUpload({
             <p className="text-gray-600 text-sm leading-relaxed text-center">
               Transform your images with AI using <a href="https://replicate.com/google/nano-banana" className="underline text-yellow-600 hover:text-yellow-700">Nano-Banana</a>, Google's powerful image editing model. Choose between <a href="https://replicate.com" className="underline text-yellow-600 hover:text-yellow-700">Replicate</a> or <a href="https://fal.ai" className="underline text-yellow-600 hover:text-yellow-700">FAL</a> as your AI provider. Built with <a href="https://nextjs.org" className="underline text-yellow-600 hover:text-yellow-700">Next.js</a> and <a href="https://tailwindcss.com" className="underline text-yellow-600 hover:text-yellow-700">Tailwind CSS</a> for a smooth editing experience. Check out the <a href="https://github.com/PierrunoYT/nano-banana-chat" className="underline text-yellow-600 hover:text-yellow-700">source code</a> on GitHub to build your own AI image editor.
             </p>
+            <p className="text-gray-500 text-xs text-center mt-3">
+              This site uses analytics to improve user experience. No personal data is stored.
+            </p>
           </div>
           
           {/* Made with Banana */}

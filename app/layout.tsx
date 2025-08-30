@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppProvider } from "@/contexts/AppContext";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Nano-Banana AI Image Editor - Transform Images with AI",
@@ -50,6 +52,8 @@ export default function RootLayout({
         <AppProvider>
           {children}
         </AppProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
