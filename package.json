@@ -5,7 +5,10 @@
 	"scripts": {
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
+		"vercel-dev": "vercel dev",
+		"build": "echo 'Build completed - static site ready'",
 		"start": "wrangler dev",
+		"vercel-deploy": "vercel --prod",
 		"test": "vitest",
 		"cf-typegen": "wrangler types"
 	},

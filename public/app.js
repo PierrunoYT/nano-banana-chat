@@ -311,14 +311,14 @@ function App() {
       const imageDataUrl = await blobToDataUrl(lastImageBlob);
       console.log('Image data URL length:', imageDataUrl.length);
 
-      console.log('Sending request to /generate-image...');
+      console.log('Sending request to /api/generate-image...');
       const requestBody = {
         prompt: input,
         input_image: imageDataUrl
       };
       console.log('Request body size:', JSON.stringify(requestBody).length);
 
-      const res = await fetch('/generate-image', {
+      const res = await fetch('/api/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Replicate-Api-Token': replicateToken },
         body: JSON.stringify(requestBody),
