@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
       output_format: "jpg"
     };
 
-    const output = await replicate.run(model, { input });
-    const replicateImageUrl = output.url();
+    const output = await replicate.run(model, { input }) as string[];
+    const replicateImageUrl = output[0];
 
     return NextResponse.json({ imageUrl: replicateImageUrl });
   } catch (error: any) {
