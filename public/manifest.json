@@ -1,0 +1,18 @@
+{
+  "name": "Nano-Banana AI Image Editor",
+  "short_name": "Nano-Banana",
+  "description": "Free AI image editor using Google's Nano-Banana model",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e04f0c",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["photo", "multimedia", "utilities"],
+  "lang": "en"
+}

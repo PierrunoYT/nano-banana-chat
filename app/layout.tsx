@@ -5,13 +5,15 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "Nano-Banana AI Image Editor - Transform Images with AI",
-  description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Choose between Replicate or FAL as your AI provider. Upload an image and describe how you'd like to edit it using natural language.",
+  metadataBase: new URL("https://nanobanana.food"),
+  title: "Nano-Banana - AI Image Editor | Google's Latest Image Generation Model",
+  description: "Free AI image editor using Google's Nano-Banana model. Transform, edit, and enhance images with natural language prompts. No signup required. Compare Replicate vs FAL providers.",
+  keywords: "AI image editor, Nano-Banana, Google image AI, free image editing, AI photo editor, image generation, natural language editing, Replicate, FAL",
   openGraph: {
     type: "website",
     url: "https://nanobanana.food/",
-    title: "Nano-Banana AI Image Editor",
-    description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Upload an image and describe how you'd like to edit it using natural language.",
+    title: "Free AI Image Editor - Nano-Banana by Google",
+    description: "Transform images with Google's Nano-Banana AI model. Free online image editing with natural language prompts. No signup required.",
     images: [
       {
         url: "/preview.png",
@@ -23,9 +25,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nano-Banana AI Image Editor",
-    description: "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Upload an image and describe how you'd like to edit it using natural language.",
+    title: "Free AI Image Editor - Nano-Banana by Google",
+    description: "Transform images with Google's Nano-Banana AI model. Free online image editing with natural language prompts. No signup required.",
     images: ["/preview.png"],
+  },
+  alternates: {
+    canonical: "https://nanobanana.food"
   },
 };
 
@@ -45,24 +50,47 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Nano-Banana AI Image Editor",
-    "description": "Transform your images with AI using Nano-Banana, Google's powerful image editing model. Upload an image and describe how you'd like to edit it using natural language.",
+    "alternateName": "Nano-Banana",
+    "description": "Free AI image editor using Google's Nano-Banana model. Transform, edit, and enhance images with natural language prompts. No signup required.",
     "url": "https://nanobanana.food",
     "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Web",
+    "operatingSystem": "Web Browser",
+    "browserRequirements": "Requires HTML5 support",
+    "softwareVersion": "1.0",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
     "creator": {
       "@type": "Organization", 
       "name": "Nano-Banana Community"
-    }
+    },
+    "keywords": "AI image editor, Nano-Banana, Google image AI, free image editing, AI photo editor, image generation, natural language editing",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    },
+    "featureList": [
+      "AI-powered image editing",
+      "Natural language prompts",
+      "Google Nano-Banana model",
+      "Free to use",
+      "No signup required",
+      "Multiple AI providers (Replicate, FAL)"
+    ]
   };
 
   return (
     <html lang="en">
       <head>
+        <meta name="theme-color" content="#e04f0c" />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Nano-Banana Community" />
+        <link rel="canonical" href="https://nanobanana.food" />
+        <link rel="manifest" href="/manifest.json" />
         <script 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

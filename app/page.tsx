@@ -372,7 +372,7 @@ export default function App() {
   }, [state.showUpload]);
 
   return (
-    <div className="min-h-screen w-full max-w-full">
+    <main className="min-h-screen w-full max-w-full">
       {/* Settings Panel */}
       <SettingsPanel
         isOpen={state.showSettings}
@@ -415,6 +415,6 @@ export default function App() {
           />
         )}
       </div>
-    </div>
+    </main>
   );
 }
