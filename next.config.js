@@ -12,9 +12,6 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  experimental: {
-    optimizeCss: true,
-  },
   headers: async () => {
     return [
       {
