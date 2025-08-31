@@ -18,12 +18,15 @@ export async function POST(request: NextRequest) {
       credentials: userToken
     });
 
-    const { prompt, input_image } = await request.json();
+    const { prompt, input_image, input_images } = await request.json();
+
+    // Handle both single and multiple image inputs
+    const images = input_images || (input_image ? [input_image] : []);
 
     const result = await fal.subscribe("fal-ai/nano-banana/edit", {
       input: {
         prompt,
-        image_urls: [input_image],
+        image_urls: images,
         num_images: 1,
         output_format: "jpeg"
       },

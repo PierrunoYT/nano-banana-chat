@@ -30,15 +30,18 @@ export default function ImageUpload({
     e.stopPropagation();
     onDragStateChange(false);
     const files = e.dataTransfer.files;
-    if (files && files[0] && files[0].type.startsWith('image/')) {
-      onFileUpload(files[0]);
+    if (files && files.length > 0) {
+      const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+      if (imageFiles.length > 0) {
+        onFileUpload(imageFiles);
+      }
     }
   }
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      onFileUpload(file);
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      onFileUpload(files);
     }
   }
 
@@ -78,13 +81,14 @@ export default function ImageUpload({
             <svg className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
             </svg>
-            <h3 className="text-xl md:text-2xl mb-2 font-bold">Upload Your Image</h3>
-            <p className="text-base md:text-lg opacity-90 mb-2">Drag and drop an image here, or click to browse</p>
-            <p className="text-sm text-gray-500">Supports JPG, PNG, GIF • Max 10MB</p>
+            <h3 className="text-xl md:text-2xl mb-2 font-bold">Upload Your Images</h3>
+            <p className="text-base md:text-lg opacity-90 mb-2">Drag and drop images here, or click to browse</p>
+            <p className="text-sm text-gray-500">Supports JPG, PNG, GIF • Max 10MB each • Upload multiple for composite editing</p>
             <input
               type="file"
               ref={fileInputRef}
               accept="image/*"
+              multiple
               className="hidden"
               onChange={handleFileSelect}
             />

@@ -14,11 +14,14 @@ export async function POST(request: NextRequest) {
     const replicate = new Replicate({ auth: userToken });
     const model = 'google/nano-banana';
 
-    const { prompt, input_image } = await request.json();
+    const { prompt, input_image, input_images } = await request.json();
 
+    // Handle both single and multiple image inputs
+    const images = input_images || (input_image ? [input_image] : []);
+    
     const input = {
       prompt,
-      image_input: [input_image],
+      image_input: images,
       output_format: "jpg"
     };
 

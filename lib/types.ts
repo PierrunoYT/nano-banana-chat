@@ -1,12 +1,23 @@
 // API Provider Types
 export type ApiProvider = 'replicate' | 'fal';
 
+// Image Role Types
+export type ImageRole = 'primary' | 'background' | 'object' | 'style' | 'reference';
+
+export interface ImageData {
+  url: string;
+  blob: Blob;
+  role: ImageRole;
+  name: string;
+}
+
 // Message Types
 export interface Message {
-  type: 'image' | 'text' | 'loading';
+  type: 'image' | 'text' | 'loading' | 'image-gallery';
   text?: string;
   image?: string;
   imageBlob?: Blob;
+  images?: ImageData[];  // For multi-image messages
   from: 'user' | 'assistant' | 'system';
   id: number;
   showDelete?: boolean;
@@ -50,7 +61,7 @@ export interface AppState {
 
 // Component Props
 export interface ImageUploadProps {
-  onFileUpload: (file: File) => void;
+  onFileUpload: (files: File[]) => void;
   onStarterImageClick: (starter: StarterImage) => void;
   dragActive: boolean;
   onDragStateChange: (active: boolean) => void;

@@ -65,43 +65,87 @@ export default function App() {
     });
   }
 
-  function getLastImageBlob(): Blob | null {
+  function getLastImageBlobs(): string[] {
+    // Get all image data URLs from the last uploaded images
     for (let i = state.messages.length - 1; i >= 0; i--) {
-      if (state.messages[i].type === 'image' && state.messages[i].imageBlob) {
-        return state.messages[i].imageBlob!;
+      const msg = state.messages[i];
+      
+      // Single image
+      if (msg.type === 'image' && msg.imageBlob) {
+        return [URL.createObjectURL(msg.imageBlob)];
+      }
+      
+      // Multiple images gallery
+      if (msg.type === 'image-gallery' && msg.images) {
+        return msg.images.map(img => img.url);
       }
     }
-    return null;
+    return [];
   }
 
   // Event handlers
-  async function handleFileUpload(file: File) {
-    if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file.');
+  async function handleFileUpload(files: File[]) {
+    // Validate files
+    const validFiles = files.filter(file => file.type.startsWith('image/'));
+    if (validFiles.length === 0) {
+      alert('Please select valid image files.');
       return;
     }
 
     const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      alert('Image file is too large. Please select an image under 10MB.');
+    const oversizedFiles = validFiles.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      alert(`${oversizedFiles.length} file(s) are too large. Please select images under 10MB.`);
       return;
     }
 
     try {
-      const scaledBlob = await scaleImageTo1Megapixel(file);
-      const url = URL.createObjectURL(scaledBlob);
+      // Process all images
+      const processedImages = await Promise.all(
+        validFiles.map(async (file, index) => {
+          const scaledBlob = await scaleImageTo1Megapixel(file);
+          const url = URL.createObjectURL(scaledBlob);
+          
+          // Assign roles: first image is primary, others need role selection
+          let role: 'primary' | 'background' | 'object' | 'style' | 'reference' = 'primary';
+          if (index === 1) role = 'background';
+          else if (index === 2) role = 'object';
+          else if (index > 2) role = 'reference';
+          
+          return {
+            url,
+            blob: scaledBlob,
+            role,
+            name: file.name
+          };
+        })
+      );
+
+      // Create messages
+      const messages = [];
+      
+      if (processedImages.length === 1) {
+        // Single image - existing workflow
+        messages.push(
+          { type: 'image' as const, image: processedImages[0].url, imageBlob: processedImages[0].blob, from: 'assistant' as const, id: Date.now() },
+          { type: 'text' as const, text: 'Image uploaded! How would you like to edit it?', from: 'system' as const, id: Date.now() + 1 }
+        );
+      } else {
+        // Multiple images - new workflow
+        messages.push(
+          { type: 'image-gallery' as const, images: processedImages, from: 'assistant' as const, id: Date.now() },
+          { type: 'text' as const, text: `${processedImages.length} images uploaded! Describe your composite editing task (e.g., "Place the product on the background", "Apply the style to the main image")`, from: 'system' as const, id: Date.now() + 1 }
+        );
+      }
 
       dispatch({
         type: 'SET_MESSAGES',
-        payload: [
-          { type: 'image', image: url, imageBlob: scaledBlob, from: 'assistant', id: Date.now() },
-          { type: 'text', text: 'Image uploaded! How would you like to edit it?', from: 'system', id: Date.now() + 1 }
-        ]
+        payload: messages
       });
 
       dispatch({ type: 'SET_SHOW_UPLOAD', payload: false });
     } catch (error: any) {
-      alert('Failed to process image: ' + error.message);
+      alert('Failed to process images: ' + error.message);
     }
   }
 
@@ -131,8 +175,8 @@ export default function App() {
 
   async function handleSendMessage(e: React.FormEvent) {
     e.preventDefault();
-    const lastImageBlob = getLastImageBlob();
-    if (!state.input.trim() || state.loading || !lastImageBlob) return;
+    const imageDataUrls = getLastImageBlobs();
+    if (!state.input.trim() || state.loading || imageDataUrls.length === 0) return;
     
     if (!currentToken) {
       dispatch({
@@ -160,7 +204,6 @@ export default function App() {
       const controller = new AbortController();
       dispatch({ type: 'SET_ABORT_CONTROLLER', payload: controller });
 
-      const imageDataUrl = await blobToDataUrl(lastImageBlob);
       const apiEndpoint = state.apiProvider === 'replicate' ? '/api/generate-image' : '/api/generate-image-fal';
       const tokenHeader = state.apiProvider === 'replicate' ? 'X-Replicate-Api-Token' : 'X-Fal-Api-Token';
       
@@ -172,7 +215,7 @@ export default function App() {
         },
         body: JSON.stringify({
           prompt: inputText,
-          input_image: imageDataUrl
+          input_images: imageDataUrls  // Send array of images
         }),
         signal: controller.signal
       });
