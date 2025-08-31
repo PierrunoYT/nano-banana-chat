@@ -91,6 +91,8 @@ export default function RootLayout({
         <meta name="author" content="Nano-Banana Community" />
         <link rel="canonical" href="https://nanobanana.food" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/svg+xml" href="/banana-icon.svg" />
+        <link rel="apple-touch-icon" href="/banana-icon.svg" />
         <script 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
