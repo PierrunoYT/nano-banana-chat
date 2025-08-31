@@ -6,8 +6,8 @@ interface PoweredByBannerProps {
 
 export default function PoweredByBanner({ onOpenSettings }: PoweredByBannerProps) {
   return (
-    <div className="bg-yellow-500 text-white text-center text-sm md:text-lg py-2 relative">
-      <div className="text-center pr-12">
+    <div className="bg-yellow-500 text-white text-sm md:text-lg py-2 relative flex items-center justify-center">
+      <div>
         <a
           href="https://replicate.com/google/nano-banana?utm_source=project&utm_campaign=kontext-chat"
           target="_blank"
