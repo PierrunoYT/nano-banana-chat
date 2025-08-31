@@ -394,8 +394,11 @@ export default function App() {
         } else if (e.type === 'drop') {
           dispatch({ type: 'SET_DRAG_ACTIVE', payload: false });
           const files = e.dataTransfer?.files;
-          if (files && files[0] && files[0].type.startsWith('image/')) {
-            handleFileUpload(files[0]);
+          if (files && files.length > 0) {
+            const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            if (imageFiles.length > 0) {
+              handleFileUpload(imageFiles);
+            }
           }
         }
       };
